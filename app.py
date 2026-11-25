@@ -312,243 +312,319 @@ def api_export():
 
 # ────────────────────────── UI ──────────────────────────
 
-PAGE = r"""<!doctype html><html lang="de"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>OSINT-Web — passives Recon</title>
+
+PAGE = r"""<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSINT Web</title>
 <style>
-:root{--bg:#05080D;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;
---acc:#1677FF;--ok:#3fb950;--bad:#f85149;--warn:#d29922}
-*{box-sizing:border-box}body{background:var(--bg);color:var(--txt);font-family:system-ui;margin:0;min-height:100vh}
-.wrap{max-width:960px;margin:0 auto;padding:32px 20px}
-.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
-h1{font-size:28px;margin:0 0 4px}h1 span{color:var(--acc)}
-.sub{color:var(--dim);margin:0 0 24px;font-size:14px}
-#dcbtn{padding:10px 18px;background:var(--acc);border:0;border-radius:8px;color:#fff;
-font-weight:700;cursor:pointer;white-space:nowrap}
-#dcbtn.out{background:var(--card);border:1px solid var(--border);color:var(--dim)}
-.dcchip{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);
-border-radius:10px;padding:8px 14px}
-.dcchip img{width:32px;height:32px;border-radius:50%}
-.dcchip b{font-size:14px}.dcchip small{color:var(--dim);display:block}
-.search{display:flex;gap:8px}
-.search input{flex:1;padding:14px 16px;background:var(--card);border:1px solid var(--border);
-border-radius:10px;color:var(--txt);font-size:16px;outline:none}
-.search input:focus{border-color:var(--acc)}
-.search button{padding:14px 28px;background:var(--acc);border:0;border-radius:10px;
-color:#fff;font-weight:700;font-size:15px;cursor:pointer}
-.search button:disabled{opacity:.5;cursor:wait}
-.tabs{display:flex;gap:6px;margin:14px 0 20px;flex-wrap:wrap}
-.tab{padding:6px 14px;border:1px solid var(--border);border-radius:20px;background:none;
-color:var(--dim);font-size:13px;cursor:pointer}
-.tab.on{background:var(--acc);border-color:var(--acc);color:#fff}
-.spin{display:none;text-align:center;padding:40px;color:var(--dim)}
-.spin.on{display:block}
-.dot{width:10px;height:10px;background:var(--acc);border-radius:50%;display:inline-block;
-animation:b 1s infinite alternate}@keyframes b{to{opacity:.2}}
-.res{margin-top:10px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:14px}
-.card h3{margin:0 0 10px;font-size:14px;text-transform:uppercase;letter-spacing:.5px;color:var(--dim)}
-.kv{display:grid;grid-template-columns:180px 1fr;gap:4px 12px;font-size:14px}
-.kv b{color:var(--dim);font-weight:500}
-.ok{color:var(--ok)} .bad{color:var(--bad)} .warn{color:var(--warn)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
-.plat{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13px}
-.plat b{display:block;margin-bottom:2px}
-.plat a{color:var(--acc);text-decoration:none;font-size:12px}
-.bar{height:8px;background:var(--bg);border-radius:4px;overflow:hidden;margin-top:6px}
-.bar i{display:block;height:100%;background:var(--ok)}
-.foot{margin-top:30px;color:var(--dim);font-size:12px;text-align:center}
-.btn{margin-top:10px;padding:8px 16px;border:1px solid var(--border);border-radius:8px;
-background:none;color:var(--txt);cursor:pointer;font-size:13px}
-/* Modal */
-#modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;place-items:center;z-index:9}
-#modal.on{display:grid}
-#modal .box{background:var(--card);border:1px solid var(--border);border-radius:14px;
-padding:28px;width:360px;max-width:92vw}
-#modal h2{margin:0 0 6px;font-size:18px}
-#modal p{color:var(--dim);font-size:12px;margin:0 0 14px}
-#modal input{width:100%;padding:11px;margin-bottom:12px;background:var(--bg);
-border:1px solid var(--border);color:var(--txt);border-radius:8px;outline:none}
-#modal .row{display:flex;gap:8px}
-#modal button{flex:1;padding:10px;border:0;border-radius:8px;font-weight:600;cursor:pointer}
-#modal .go{background:var(--acc);color:#fff}
-#modal .no{background:none;border:1px solid var(--border);color:var(--dim)}
-#modal .err{color:var(--bad);font-size:12px;margin:0 0 10px;display:none}
-/* Discord-Karte */
-.dcgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:700px){.dcgrid{grid-template-columns:1fr}}
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;
-border:1px solid var(--border);color:var(--dim);margin:1px}
-</style></head><body><div class="wrap">
-
-<div class="top">
- <div><h1>OSINT<span>·</span>Web</h1>
- <p class="sub">Passives Recon — nur öffentliche APIs &amp; Datenbanken. Kein Profil-Footprint.</p></div>
- <div id="dctop"><button id="dcbtn" onclick="openModal()">Discord Login</button></div>
+:root {
+  --bg: #05080d;
+  --panel: #0b111b;
+  --panel2: #101927;
+  --border: #1c2938;
+  --blue: #1677ff;
+  --text: #e8eef7;
+  --muted: #8391a5;
+  --green: #20d6a1;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, Arial, sans-serif;
+}
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+.sidebar {
+  width: 245px;
+  background: #080d14;
+  border-right: 1px solid var(--border);
+  padding: 25px 16px;
+}
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 35px;
+}
+.logo span {
+  color: var(--blue);
+}
+.nav-title {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 25px 10px 12px;
+}
+.nav-item {
+  padding: 12px;
+  border-radius: 9px;
+  margin-bottom: 5px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.nav-item.active {
+  color: white;
+  background: #122644;
+  border: 1px solid #1b3e6d;
+}
+.main {
+  flex: 1;
+  padding: 35px;
+  max-width: 1500px;
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--green);
+  font-size: 13px;
+}
+.statusdot {
+  width: 8px;
+  height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  box-shadow: 0 0 9px var(--green);
+}
+.hero h1 {
+  font-size: 34px;
+  margin: 0 0 12px;
+}
+.hero p {
+  color: var(--muted);
+  margin: 0 0 30px;
+}
+.searchbox {
+  display: flex;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 10px;
+  max-width: 850px;
+  gap: 10px;
+}
+.searchbox input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  color: white;
+  border: none;
+  outline: none;
+  padding: 14px;
+  font-size: 15px;
+}
+.searchbox button {
+  background: var(--blue);
+  color: white;
+  border: 0;
+  border-radius: 9px;
+  padding: 0 24px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.section-title {
+  margin: 40px 0 18px;
+  font-size: 18px;
+}
+.tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(210px,1fr));
+  gap: 15px;
+}
+.tool {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  cursor: pointer;
+  transition: .2s;
+}
+.tool:hover {
+  border-color: var(--blue);
+  transform: translateY(-2px);
+}
+.tool-icon {
+  font-size: 23px;
+  margin-bottom: 15px;
+}
+.tool h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.tool p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+}
+.results {
+  margin-top: 30px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+  min-height: 100px;
+}
+.results h2 {
+  font-size: 17px;
+  margin-top: 0;
+}
+@media(max-width:800px) {
+  .sidebar {
+    display: none;
+  }
+  .main {
+    padding: 20px;
+  }
+  .hero h1 {
+    font-size: 27px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="logo">OSINT<span>WEB</span></div>
+  <div class="nav-title">Workspace</div>
+  <div class="nav-item active">◈ Dashboard</div>
+  <div class="nav-item">⌕ Search</div>
+  <div class="nav-title">Tools</div>
+  <div class="nav-item">◎ Username</div>
+  <div class="nav-item">✉ Email</div>
+  <div class="nav-item">⌘ Domain</div>
+  <div class="nav-item">⌁ IP Address</div>
+  <div class="nav-item">♧ Phone</div>
+</aside>
+<main class="main">
+<header class="topbar">
+  <strong>Workspace / Dashboard</strong>
+  <div class="status"><span class="statusdot"></span> System online</div>
+</header>
+<section class="hero">
+  <h1>OSINT Dashboard</h1>
+  <p>Open-source intelligence tools in one workspace.</p>
+  <div class="searchbox">
+    <input id="target" placeholder="Enter username, email, domain, IP or phone..." />
+    <button onclick="runScan()">Analyze</button>
+  </div>
+</section>
+<h2 class="section-title">Investigation tools</h2>
+<div class="tools">
+  <div class="tool" onclick="setMode('username')">
+    <div class="tool-icon">◎</div>
+    <h3>Username Search</h3>
+    <p>Search for public username profiles.</p>
+  </div>
+  <div class="tool" onclick="setMode('email')">
+    <div class="tool-icon">✉</div>
+    <h3>Email Lookup</h3>
+    <p>Review publicly available email signals.</p>
+  </div>
+  <div class="tool" onclick="setMode('domain')">
+    <div class="tool-icon">⌘</div>
+    <h3>Domain Scan</h3>
+    <p>DNS, registration and public subdomains.</p>
+  </div>
+  <div class="tool" onclick="setMode('ip')">
+    <div class="tool-icon">⌁</div>
+    <h3>IP Lookup</h3>
+    <p>Review public IP information.</p>
+  </div>
+  <div class="tool" onclick="setMode('phone')">
+    <div class="tool-icon">♧</div>
+    <h3>Phone Lookup</h3>
+    <p>Basic phone number information.</p>
+  </div>
 </div>
-
-<div class="tabs" id="tabs">
-<button class="tab on" data-m="auto">Auto</button>
-<button class="tab" data-m="user">Username</button>
-<button class="tab" data-m="email">E-Mail</button>
-<button class="tab" data-m="domain">Domain</button>
-<button class="tab" data-m="ip">IP</button>
-<button class="tab" data-m="phone">Telefon</button>
-<button class="tab" data-m="password">Passwort</button>
+<div class="results" id="results">
+  <h2>Results</h2>
+  <p style="color:var(--muted)">Your analysis results will appear here.</p>
 </div>
-
-<div class="search">
-<input id="t" placeholder="Username, E-Mail, Domain, IP, +49…, Passwort" autofocus>
-<button id="go" onclick="run()">Scannen</button>
+</main>
 </div>
-
-<div class="spin" id="spin"><span class="dot"></span>&nbsp; Abfrage läuft …</div>
-<div class="res" id="res"></div>
-
-<p class="foot">Quellen: GitHub · Reddit · Keybase · crt.sh · urlscan.io · HIBP · ip-api — nur öffentliche Daten. Gesetze beachten.</p>
-</div>
-
-<!-- Discord Login Modal -->
-<div id="modal" onclick="if(event.target===this)closeModal()">
-<div class="box"><h2>Discord User-Token</h2>
-<p>Nur für deinen eigenen Account. Token wird im Session-Cookie behalten, nicht gespeichert.</p>
-<div class="err" id="dcerr"></div>
-<input id="dctok" type="password" placeholder="MTIz..." autofocus>
-<div class="row"><button class="go" onclick="dcLogin()">Einloggen</button>
-<button class="no" onclick="closeModal()">Abbrechen</button></div></div></div>
 
 <script>
-const esc=s=>String(s??"—").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-let MODE="auto";
+let mode = "username";
 
-/* ── Discord ── */
-function openModal(){document.getElementById("modal").classList.add("on");
- const i=document.getElementById("dctok");i.value="";i.focus()}
-function closeModal(){document.getElementById("modal").classList.remove("on");
- document.getElementById("dcerr").style.display="none"}
-async function dcLogin(){
- const tok=document.getElementById("dctok").value.trim();
- const err=document.getElementById("dcerr");
- if(!tok)return;
- const r=await fetch("/api/discord/login",{method:"POST",
-  headers:{"Content-Type":"application/json"},body:JSON.stringify({token:tok})});
- const d=await r.json();
- if(!r.ok){err.textContent=d.error||"Fehler";err.style.display="block";return}
- closeModal();renderDiscord(d);
-}
-async function dcLogout(){
- await fetch("/api/discord/logout",{method:"POST"});
- document.getElementById("dctop").innerHTML=
-  `<button id="dcbtn" onclick="openModal()">Discord Login</button>`;
- const c=document.getElementById("dccard");if(c)c.remove();
-}
-function renderDiscord(p){
- document.getElementById("dctop").innerHTML=
-  `<div class="dcchip"><img src="${esc(p.avatar)}"><div><b>${esc(p.display)}</b>
-   <small>@${esc(p.username)} · Logout</small></div>
-   <button class="btn" style="margin:0;padding:6px 12px" onclick="dcLogout()">✕</button></div>`;
- const badge=t=>t?`<span class="badge">${esc(t)}</span>`:"";
- const gcard=card("Discord — "+p.display,`
-  <div style="display:flex;gap:16px;align-items:center;margin-bottom:14px">
-   <img src="${esc(p.avatar)}" style="width:64px;height:64px;border-radius:50%">
-   <div class="kv" style="flex:1">
-    <b>Username</b><span>@${esc(p.username)} (${esc(p.id)})</span>
-    <b>E-Mail</b><span>${esc(p.email||"—")} ${p.verified?'<span class="ok">✓ verifiziert</span>':""}</span>
-    <b>Telefon</b><span>${esc(p.phone||"—")}</span>
-    <b>MFA / Nitro</b><span>${p.mfa?'<span class="ok">aktiv</span>':'<span class="bad">aus</span>'} · ${esc(p.nitro)}</span>
-    <b>Erstellt</b><span>${esc(p.created)} (Snowflake)</span>
-    <b>Server</b><span>${p.guild_count}</span>
-   </div></div>
-  <div class="dcgrid"><div><b style="font-size:13px">Top-Server</b>
-   ${p.guilds.map(g=>`<div class="plat" style="margin-top:6px"><b>${esc(g.name)}</b>
-    ${g.mitglieder??"?"} Mitglieder ${g.owner?'<span class="warn">Owner</span>':""}${g.admin?'<span class="warn">Admin</span>':""}</div>`).join("")}
-  </div><div><b style="font-size:13px">Badges/Rohdaten</b>
-   ${badge("ID "+p.id)}${badge(p.nitro)}${p.mfa?badge("2FA"):badge("kein 2FA")}
-   ${p.email?badge("E-Mail vorhanden"):""}${p.phone?badge("Telefon vorhanden"):""}
-   ${badge(p.created)}</div></div>`);
- const anchor=document.createElement("div");anchor.id="dccard";anchor.innerHTML=gcard;
- document.getElementById("res").prepend(anchor);
-}
-/* beim Laden prüfen ob Session aktiv */
-fetch("/api/discord/refresh",{method:"POST"})
- .then(r=>r.ok?r.json():null).then(d=>{if(d)renderDiscord(d)});
+function setMode(m) {
+  mode = m;
 
-/* ── OSINT ── */
-document.getElementById("tabs").addEventListener("click",e=>{
- if(!e.target.classList.contains("tab"))return;
- document.querySelectorAll(".tab").forEach(t=>t.classList.remove("on"));
- e.target.classList.add("on");MODE=e.target.dataset.m;
-});
-document.getElementById("t").addEventListener("keydown",e=>{if(e.key==="Enter")run()});
-async function run(){
- const t=document.getElementById("t").value.trim();if(!t)return;
- const go=document.getElementById("go"),sp=document.getElementById("spin"),res=document.getElementById("res");
- go.disabled=true;sp.classList.add("on");res.innerHTML="";
- try{
-  const r=await fetch("/api/scan",{method:"POST",
-   headers:{"Content-Type":"application/json"},body:JSON.stringify({target:t,mode:MODE})});
-  const d=await r.json();
-  if(d.error)res.innerHTML=`<div class="card bad">Fehler: ${esc(d.error)}</div>`;else render(d);
- }catch(e){res.innerHTML=`<div class="card bad">Netzwerkfehler: ${esc(e)}</div>`}
- go.disabled=false;sp.classList.remove("on");
+  document.querySelectorAll(".tool").forEach(el => {
+    el.classList.remove("selected");
+  });
+
+  const input = document.getElementById("target");
+  input.placeholder = "Enter target for " + m + " search...";
+  input.focus();
+
+  input.style.borderColor = "#1677ff";
+  input.style.boxShadow = "0 0 12px rgba(22,119,255,.2)";
 }
-function card(h,body){return `<div class="card"><h3>${h}</h3>${body}</div>`}
-function kv(o){return `<div class="kv">`+Object.entries(o).map(([k,v])=>
- `<b>${esc(k)}</b><span>${typeof v==="boolean"?(v?'<span class="ok">ja</span>':'<span class="bad">nein</span>'):esc(v)}</span>`).join("")+`</div>`}
-function list(a){return a&&a.length?`<div class="grid">`+a.map(x=>`<div class="plat">${esc(x)}</div>`).join("")+`</div>`:"—"}
-function render(d){
- let h="";
- if(d.typ==="user"){
-  const hits=d.treffer.filter(x=>x.gefunden),miss=d.treffer.filter(x=>!x.gefunden);
-  h+=card(`Username — ${hits.length}/${d.treffer.length} Treffer`,
-   `<div class="grid">`+hits.map(x=>`<div class="plat"><b class="ok">${esc(x.plattform)}</b>`+
-    Object.entries(x.daten).filter(([k,v])=>v).slice(0,3).map(([k,v])=>`${esc(k)}: ${esc(String(v).slice(0,40))}`).join(" · ")+
-    `<br><a href="${esc(x.url)}" target="_blank" rel="noopener">öffnen ↗</a></div>`).join("")+`</div>`+
-   (miss.length?`<p style="color:var(--dim);font-size:12px;margin:12px 0 0">nicht gefunden: ${esc(miss.map(m=>m.plattform).join(", "))}</p>`:""));
- }
- else if(d.typ==="email"){
-  const leaks=d.leaks;
-  h+=card("E-Mail",kv({Syntax:d.syntax,"Mailserver (MX)":(d.MX||[]).join(", ")||"keine",
-   SPF:(d.SPF||[]).join(" ")||"keine",Gravatar:d.gravatar,
-   Keybase:d.keybase?d.keybase.user||d.keybase.name:"nicht gefunden"}));
-  h+=card("Leak-Datenbank (HIBP)",
-   Array.isArray(leaks)?(leaks.length?`<div class="grid">`+leaks.map(l=>
-    `<div class="plat"><b class="warn">${esc(l.name)}</b>${esc(l.jahr)} · ${esc((l.daten||[]).join(", "))}</div>`).join("")+`</div>`
-    :`<span class="ok">keine bekannten Leaks</span>`):`<span class="dim">${esc(leaks.hinweis||leaks.fehler||"—")}</span>`);
-  if(d.gravatar)h+=card("Avatar",`<img src="${esc(d.gravatar_url)}?s=96" style="border-radius:50%">`);
- }
- else if(d.typ==="domain"){
-  h+=card("DNS",kv(Object.fromEntries(Object.entries(d.DNS||{}).map(([k,v])=>[k,(v||[]).join(", ")||"—"]))));
-  h+=card("WHOIS",kv(d.WHOIS||{}));
-  h+=card(`Subdomains (${(d.subdomains||[]).length})`,list(d.subdomains));
-  h+=card("Historie (urlscan)",kv({"bekannte IPs":(d.urlscan_ips||[]).join(", ")||"—",
-   "Server":(d.urlscan_server||[]).join(", ")||"—"}));
- }
- else if(d.typ==="ip"){
-  const g=d.geo||{};
-  h+=card("IP-Geolokation",kv({Land:g.country,Region:g.regionName,Stadt:g.city,
-   Koordinaten:g.lat!=null?`${g.lat}, ${g.lon}`:"—",ISP:g.isp,Org:g.org,AS:g.as,
-   ReverseDNS:d.PTR||"—",Proxy:g.proxy,Hosting:g.hosting}));
-  if(g.lat)h+=card("Karte",`<a href="https://www.openstreetmap.org/?mlat=${g.lat}&mlon=${g.lon}#map=11/${g.lat}/${g.lon}" target="_blank" rel="noopener">OpenStreetMap öffnen ↗</a>`);
- }
- else if(d.typ==="phone")h+=card("Telefon",kv(d));
- else if(d.typ==="password"){
-  const b=d.bewertung,col=b.includes("schwach")?"bad":b==="mittel"?"warn":"ok";
-  h+=card("Passwort-Analyse",kv({Länge:d.laenge,
-   Bewertung:`<span class="${col}">${esc(b)}</span>`,
-   "In Leaks":d.in_leaks?`<span class="bad">ja — ${d.leak_vorkommen}× gefunden</span>`:'<span class="ok">nein</span>'})+
-   `<div class="bar"><i style="width:${Math.min(100,d.entropie_bits)}%"></i></div>
-   <p style="color:var(--dim);font-size:12px">Entropie: ${d.entropie_bits} bits — geprüft via k-Anonymity, das Passwort selbst verlässt den Rechner nie.</p>`);
- }
- h+=`<button class="btn" onclick="dl()">⬇ JSON-Report</button>`;
- document.getElementById("res").innerHTML=h;window._last=d;
+async function runScan() {
+  const target = document.getElementById("target").value.trim();
+  const results = document.getElementById("results");
+
+  if (!target) {
+    results.innerHTML = "<h2>Results</h2><p>Please enter a search target.</p>";
+    return;
+  }
+
+  results.innerHTML = "<h2>Results</h2><p>Analyzing...</p>";
+
+  try {
+    const response = await fetch("/api/scan", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        mode: mode,
+        target: target
+      })
+    });
+
+    const data = await response.json();
+
+    results.innerHTML = "<h2>Results</h2>";
+
+    if (!response.ok) {
+      results.innerHTML += "<p>Request failed.</p>";
+      return;
+    }
+
+    results.innerHTML +=
+      "<pre style='white-space:pre-wrap;overflow-wrap:anywhere'>" +
+      JSON.stringify(data, null, 2) +
+      "</pre>";
+
+  } catch (error) {
+    results.innerHTML =
+      "<h2>Results</h2><p>Connection error: " +
+      error.message +
+      "</p>";
+  }
 }
-function dl(){
- const a=document.createElement("a");
- a.href="/api/export?d="+encodeURIComponent(JSON.stringify(window._last||{}));
- a.download="osint-report.json";a.click();
-}
-</script></body></html>"""
+</script>
+</body>
+</html>
+"""
+
 
 @app.get("/")
 def index():
