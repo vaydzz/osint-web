@@ -316,8 +316,8 @@ PAGE = r"""<!doctype html><html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>OSINT-Web — passives Recon</title>
 <style>
-:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;
---acc:#5865f2;--ok:#3fb950;--bad:#f85149;--warn:#d29922}
+:root{--bg:#05080D;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;
+--acc:#1677FF;--ok:#3fb950;--bad:#f85149;--warn:#d29922}
 *{box-sizing:border-box}body{background:var(--bg);color:var(--txt);font-family:system-ui;margin:0;min-height:100vh}
 .wrap{max-width:960px;margin:0 auto;padding:32px 20px}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
