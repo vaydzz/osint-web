@@ -1,0 +1,6 @@
+flask
+gunicorn
+requests
+dnspython
+phonenumbers
+exifread
